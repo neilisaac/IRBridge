@@ -1,0 +1,107 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>IRBridge Remote</title>
+    <meta name="description" content="IRBridge Remote">
+    <meta name="author" content="Neil Isaac">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script>
+        function send(code) {
+            $.ajax({
+                type: "POST",
+                url: "/send/" + code,
+                success: function(msg){},
+                error: function(){}
+            });
+        }
+    </script>
+
+    <style>
+        body {
+            font-size: 16pt;
+        }
+        .row {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        .heading {
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid black;
+        }
+        .box {
+            margin: 0.5em;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 heading">
+                dac power
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <button class="btn-danger btn-lg btn-block" onclick="send('dac-off')">OFF</button>
+            </div>
+            <div class="col-xs-6">
+                <button class="btn-success btn-lg btn-block" onclick="send('dac-on')">ON</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 heading">
+                dac input
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <button class="btn-lg btn-block" onclick="send('dac-opt1')">TV</button>
+            </div>
+            <div class="col-sm-4">
+                <button class="btn-lg btn-block" onclick="send('dac-opt2')">ChromeCast</button>
+            </div>
+            <div class="col-sm-4">
+                <button class="btn-lg btn-block" onclick="send('dac-usb')">Roon</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 heading">
+                dac volume
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <button class="btn-primary btn-lg btn-block" onclick="send('dac-vol-down')">DOWN</button>
+            </div>
+            <div class="col-xs-6">
+                <button class="btn-primary btn-lg btn-block" onclick="send('dac-vol-up')">UP</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <button class="btn-lg btn-block" onclick="send('dac-mute')">MUTE</button>
+            </div>
+            <div class="col-xs-6">
+                <button class="btn-lg btn-block" onclick="send('dac-bypass')">SRC BYPASS</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

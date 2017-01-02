@@ -1,0 +1,15 @@
+[Unit]
+Description=IRBridge
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=30
+WorkingDirectory=/opt/IRBridge
+ExecStart=/opt/IRBridge/server.py
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
+

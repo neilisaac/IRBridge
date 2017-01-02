@@ -8,15 +8,17 @@ import tornado.ioloop
 import tornado.web
 
 
-class MainHandler(tornado.web.RequestHandler):
+class FileHandler(tornado.web.RequestHandler):
 
-    def initialize(self, filename):
+    def initialize(self, filename, content_type='text/html'):
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.content_type = content_type
         with open(filename) as f:
-            self.html = f.read()
+            self.data = f.read()
 
     def get(self):
-        self.write(self.html)
+        self.set_header("Content-type", self.content_type)
+        self.write(self.data)
 
 
 class SendHandler(tornado.web.RequestHandler):
@@ -34,7 +36,9 @@ class SendHandler(tornado.web.RequestHandler):
 def main():
     tornado.log.enable_pretty_logging()
     app = tornado.web.Application([
-        (r"/", MainHandler, dict(filename='remote.html')),
+        (r"/", FileHandler, dict(filename='remote.html')),
+        (r"/icon.png", FileHandler, dict(filename='icon.png', content_type='image/png')),
+        (r"/favicon.png", FileHandler, dict(filename='favicon.png', content_type='image/png')),
         (r"/send/(.*)", SendHandler, dict(device='/dev/ttyACM0', baud=9600)),
     ])
     app.listen(80)

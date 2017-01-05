@@ -38,7 +38,13 @@
         body {
             font-size: 16pt;
             color: white;
-            background-color: #444;
+            background-color: black;
+        }
+        .btn {
+            color: black;
+        }
+        .dropdown-menu {
+            font-size: 16pt;
         }
         .row {
             margin-top: 0.5em;
@@ -106,44 +112,41 @@
         </div>
 
         <div class="row">
-            <div class="col-xs-12">
-                <div class="btn-group btn-group-lg btn-group-justified" role="group">
-
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-info btn-lg" onclick="send('dac-opt1')">TV</button>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-info btn-lg" onclick="send('dac-opt2')">ChromeCast</button>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-info btn-lg" onclick="send('dac-usb')">Roon</button>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-info btn-lg dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            All
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="#" onclick="send('dac-opt1')">OPT1</a></li>
-                            <li><a href="#" onclick="send('dac-opt2')">OPT2</a></li>
-                            <li><a href="#" onclick="send('dac-usb')">USB</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#" onclick="send('dac-coax1')">COAX1</a></li>
-                            <li><a href="#" onclick="send('dac-coax2')">COAX2</a></li>
-                            <li><a href="#" onclick="send('dac-aes')">AES</a></li>
-                        </ul>
-                    </div>
-
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-info btn-lg btn-block" onclick="send('dac-opt1')">TV</button>
+            </div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-info btn-lg btn-block" onclick="send('dac-opt2')">ChromeCast</button>
+            </div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-info btn-lg btn-block" onclick="send('dac-usb')">Roon</button>
+            </div>
+            <div class="col-sm-3">
+                <div class="btn-group btn-block">
+                    <button class="btn btn-info btn-lg btn-block dropdown-toggle" type="button" data-toggle="dropdown">
+                        All
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" onclick="send('dac-opt1')">OPT1</a></li>
+                        <li><a href="#" onclick="send('dac-opt2')">OPT2</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" onclick="send('dac-coax1')">COAX1</a></li>
+                        <li><a href="#" onclick="send('dac-coax2')">COAX2</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" onclick="send('dac-aes')">AES</a></li>
+                        <li><a href="#" onclick="send('dac-usb')">USB</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-xs-6">
-                <button class="btn-info btn-lg btn-block" onclick="send('dac-bypass')">SRC BYPASS</button>
+                <button class="btn btn-info btn-lg btn-block" onclick="send('dac-bypass')">SRC BYPASS</button>
             </div>
             <div class="col-xs-6">
-                <button class="btn-info btn-lg btn-block" onclick="send('dac-dim')">DIM</button>
+                <button class="btn btn-info btn-lg btn-block" onclick="send('dac-dim')">DIM</button>
             </div>
         </div>
 

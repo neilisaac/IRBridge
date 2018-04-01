@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: remote-app
+  labels: {app: remote}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: remote
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels: {app: remote}
+    spec:
+      containers:
+      - name: app
+        image: us.gcr.io/neil-164300/webhooksub:20180401031008
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: webhooksub-svc
+  labels: {app: remote}
+spec:
+  type: LoadBalancer
+  selector:
+    app: remote
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080

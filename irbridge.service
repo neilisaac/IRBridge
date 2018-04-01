@@ -6,10 +6,9 @@ Type=simple
 Restart=always
 RestartSec=30
 WorkingDirectory=/opt/IRBridge
-ExecStart=/opt/IRBridge/server.py
+ExecStart=/opt/IRBridge/remote client ws://host:port/subscribe/client_uuid
 StandardOutput=syslog
 StandardError=syslog
 
 [Install]
 WantedBy=multi-user.target
-

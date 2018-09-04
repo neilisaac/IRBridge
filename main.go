@@ -1,6 +1,8 @@
 package main
 
 import (
+	"path/filepath"
+
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +21,14 @@ func main() {
 		RunE:  runClient,
 		Args:  cobra.ExactArgs(1),
 	}
-	client.Flags().String("device", "/dev/ttyACM0", "serial device")
+
+	defaultDevice := "/dev/ttyACM0"
+	if devices, _ := filepath.Glob("/dev/ttyACM*"); len(devices) > 0 {
+		defaultDevice = devices[0]
+	} else if devices, _ := filepath.Glob("/dev/ttyUSB*"); len(devices) > 0 {
+		defaultDevice = devices[0]
+	}
+	client.Flags().String("device", defaultDevice, "serial device")
 
 	cmd := &cobra.Command{Use: "IRBridge"}
 	cmd.AddCommand(server)

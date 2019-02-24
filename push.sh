@@ -9,3 +9,6 @@ docker tag "${image}:latest" "${image}:${version}"
 docker push "${image}:latest"
 docker push "${image}:${version}"
 echo "pushed ${image}:${version}"
+
+echo "to update, run: gcloud beta compute instances update-container irbridge --container-image ${image}:${version}`
+

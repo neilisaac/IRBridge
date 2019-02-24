@@ -36,6 +36,7 @@ func runServer(cmd *cobra.Command, args []string) error {
 	router.GET("/remote/:id", serveFrontend)
 	router.POST("/trigger/:id", d.Trigger) // code in post body: used by ifttt
 	router.POST("/send/:id/:code", d.Send) // code in url: used by frontend
+	router.GET("/send/:id/:code", d.Send) // code in url: used for webhooks
 	router.GET("/subscribe/:id", d.Subscribe)
 
 	port, err := cmd.Flags().GetInt("port")

@@ -1,5 +1,6 @@
-#include <IRremote.h>
+#include <IRremote.h> // likely originally used 2.1.0, tested with 2.2.3
 
+const uint8_t TRIGGER_CABLE_PIN = 7;
 
 IRrecv irrecv(A2);
 IRsend irsend;
@@ -14,10 +15,10 @@ struct Entry {
 
 const Entry TABLE[] = {
   {"dac-on",       NEC,  32, 0x60ff11ee},
-  {"dac-off",      NEC,  32, 0x60ff916e},
+  {"dac-off",      NEC,  32, 0x60ff916e, "trigger-off"},
   {"dac-dim",      NEC,  32, 0x60FF21DE},
-  {"dac-vol-up",   NEC,  32, 0x60ff936c},
-  {"dac-vol-down", NEC,  32, 0x60ffa35c},
+  {"dac-vol-up",   NEC,  32, 0x60ff936c, "trigger-on"},
+  {"dac-vol-down", NEC,  32, 0x60ffa35c, "trigger-on"},
   {"dac-mute",     NEC,  32, 0x60ffa15e},
   {"dac-opt1",     NEC,  32, 0x60ff51ae},
   {"dac-opt2",     NEC,  32, 0x60ffd12e},
@@ -40,12 +41,43 @@ const Entry TABLE[] = {
 void
 setup()
 {
+  pinMode(TRIGGER_CABLE_PIN, OUTPUT);
+
   Serial.begin(9600);
   Serial.println("setup");
 
   irrecv.enableIRIn();
 }
 
+void
+handle(const struct Entry &entry) {
+  if (entry.trigger) {
+    Serial.print("handling ");
+    Serial.println(entry.key);
+
+    // control trigger cable output
+    if (entry.trigger == "trigger-on") {
+      digitalWrite(TRIGGER_CABLE_PIN, HIGH);
+      Serial.println("trigger cable enabled");
+    }
+    else if (entry.trigger == "trigger-off") {
+      digitalWrite(TRIGGER_CABLE_PIN, LOW);
+      Serial.println("trigger cable disabled");
+    }
+
+    // transmit trigger code if one exists
+    const Entry *code = find_entry_by_name(entry.trigger);
+    if (code) {
+      send(*code);
+      delay(40);
+      send(*code);
+      delay(40);
+      send(*code);
+
+      setup();
+    }
+  }
+}
 
 void
 send(const struct Entry &entry) {
@@ -97,8 +129,11 @@ loop() {
   static String buf = String("");
   while (Serial.available() > 0) {
     char data = Serial.read();
-    if (data != '\n' && data != '\0') {
+    if (data != '\r' && data != '\n' && data != '\0') {
       buf += data;
+      continue;
+    }
+    if (buf == "") {
       continue;
     }
 
@@ -106,11 +141,10 @@ loop() {
     Serial.println(buf);
 
     const Entry *code = find_entry_by_name(buf);
-    if (code != 0) {
+    if (code) {
       send(*code);
       setup();
     }
-
     buf = String("");
   }
 
@@ -119,7 +153,6 @@ loop() {
   if (!irrecv.decode(&results)) {
     return;
   }
-
   if (results.decode_type > 0 && results.bits > 0) {
     Serial.print("received ir code type: ");
     Serial.print(results.decode_type);
@@ -128,19 +161,9 @@ loop() {
     Serial.print(" value: 0x");
     Serial.println(results.value, HEX);
 
-    // transmit trigger code if one exists
     const Entry *entry = find_entry_by_value(results.decode_type, results.bits, results.value);
-    if (entry && entry->trigger) {
-      const Entry *code = find_entry_by_name(entry->trigger);
-      if (code) {
-        send(*code);
-        delay(40);
-        send(*code);
-        delay(40);
-        send(*code);
-        
-        setup();
-      }
+    if (entry) {
+      handle(*entry);
     }
   }
 
